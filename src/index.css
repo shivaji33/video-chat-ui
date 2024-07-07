@@ -53,8 +53,8 @@ input {
 
 .small-video {
   position: absolute;
-  bottom: 10px;
   right: 10px;
+  top: 10px;
   width: 200px;
   height: 150px;
   z-index: 10;
