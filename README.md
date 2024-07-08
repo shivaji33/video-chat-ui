@@ -2,6 +2,10 @@
 
 This project is a video call application built using WebRTC, WebSockets, React, Node.js, Socket.IO, and PeerJS. It allows users to join a room, start video calls, and communicate with each other through audio and video streams.
 
+## Demo
+
+Check out the live demo [here](https://video-chat-ui.onrender.com/).
+
 ## Features
 
 - Join a video call room with a unique ID and username.
