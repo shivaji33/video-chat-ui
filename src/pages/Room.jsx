@@ -172,7 +172,7 @@ const Room = () => {
               {(isCurrentUser ? isVideoEnabled : video) ? (
                 <ReactPlayer
                   url={stream}
-                  muted={!audio}
+                  muted={isCurrentUser ? true : !audio}
                   playing={video}
                   width="100%"
                   height="100%"
