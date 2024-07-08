@@ -153,6 +153,19 @@ const Room = () => {
     navigate('/');
   };
 
+   useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      socket.emit("CALL_END", roomId, peerId);
+      peer.disconnect();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [socket, roomId, peerId, peer]);
+
   return (
     <div className="room-container">
       {[...streams.entries()].map(
