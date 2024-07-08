@@ -1,8 +1,27 @@
-# React + Vite
+# Video Call Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a video call application built using WebRTC, WebSockets, React, Node.js, Socket.IO, and PeerJS. It allows users to join a room, start video calls, and communicate with each other through audio and video streams.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Join a video call room with a unique ID and username.
+- Real-time video and audio streaming using WebRTC and PeerJS.
+- Mute/unmute audio and start/stop video during the call.
+- Display participant names and handle multiple participants in a grid layout.
+- End the call and navigate back to the home page.
+
+## Technologies Used
+
+- React
+- WebRTC
+- PeerJS
+- Socket.IO
+- React Router
+- ReactPlayer
+
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/shivaji33/video-chat-ui.git
+cd video-chat-ui
