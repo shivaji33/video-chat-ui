@@ -2,19 +2,25 @@ import { useEffect, useState } from "react";
 
 const useMedia = () => {
   const [mediaStream, setMediaStream] = useState(null);
-  const [isVideoEnabled, setIsVideoEnabled] = useState(true);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
+  const [isVideoEnabled, setIsVideoEnabled] = useState(false);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const [accessStatus,setAccessStatus] = useState('INIT');
 
   useEffect(() => {
     const getMediaStream = async () => {
       try {
+        setAccessStatus('PENDING');
         const stream = await navigator.mediaDevices.getUserMedia({
           audio: true,
           video: true,
         });
         setMediaStream(stream);
+        setAccessStatus('GRANTED');
+        setIsAudioEnabled(true);
+        setIsVideoEnabled(true)
       } catch (error) {
         console.error("Error accessing media devices:", error);
+        setAccessStatus('DENIED');
       }
     };
 
@@ -45,7 +51,10 @@ const useMedia = () => {
     }
   };
 
+  
+
   return {
+    accessStatus,
     mediaStream,
     toggleVideo,
     toggleAudio,

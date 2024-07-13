@@ -1,13 +1,15 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import usePeer from "../hooks/usePeer";
 import { useSocket } from "../context/socket";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import useMedia from "../hooks/useMedia";
 import NoVideoFallback from "../assets/video-not-working.png";
+import AudioToggleButton from "../components/AudioToggleButton";
+import VideoToggleButton from "../components/VideoToggleButton";
 
 const Room = () => {
-  const { roomId, userName } = useParams();
+  const { roomId } = useParams();
   const [peer, peerId] = usePeer();
   const socket = useSocket();
   const [streams, setStreams] = useState(new Map());
@@ -21,6 +23,9 @@ const Room = () => {
   } = useMedia();
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const {userName} = location.state;
 
   useEffect(() => {
     if (!peerId || !socket || !roomId || !media) return;
@@ -203,26 +208,8 @@ const Room = () => {
       )}
       <div className="controls_wrapper">
         <div className="controls">
-          <button
-            className={`control-item text-white ${
-              isAudioEnabled ? "bg-green-600" : "bg-red-500"
-            }`}
-            onClick={handleToggleAudio}
-          >
-            <span className="material-symbols-outlined">
-              {isAudioEnabled ? "mic" : "mic_off"}
-            </span>
-          </button>
-          <button
-            className={`control-item text-white ${
-              isVideoEnabled ? "bg-green-600" : "bg-red-500"
-            }`}
-            onClick={handleToggleVideo}
-          >
-            <span className="material-symbols-outlined">
-              {isVideoEnabled ? "videocam" : "videocam_off"}
-            </span>
-          </button>
+          <AudioToggleButton isAudioEnabled={isAudioEnabled} onClick={handleToggleAudio} />
+          <VideoToggleButton isVideoEnabled={isVideoEnabled} onClick={handleToggleVideo} />
           <button className="control-item bg-red-500" onClick={onCallEnd}>
             <span className="material-symbols-outlined text-white">
               call_end

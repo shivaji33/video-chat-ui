@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
 const SocketStore = createContext(null);
-const ENDPOINT = "https://video-chat-api-csly.onrender.com";
+const ENDPOINT = "http://localhost:4000";
 
 export const useSocket = () => useContext(SocketStore)
 

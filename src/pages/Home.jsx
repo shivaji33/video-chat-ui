@@ -14,7 +14,7 @@ const Home = () => {
       alert("Please enter valid meeting id and name!");
       return;
     }
-    navigate(`/${roomId}/${name}`);
+    navigate(`/${roomId}/preview`, {state: {userName: name}});
   };
 
   const onCreateRoom = () => {
@@ -24,7 +24,7 @@ const Home = () => {
       return;
     }
     const uuid = self.crypto.randomUUID();
-    navigate(`/${uuid}/${hostName}`);
+    navigate(`/${uuid}/preview`, {state: {userName: hostName}});
   };
 
   return (
