@@ -14,18 +14,18 @@ const Room = () => {
   const socket = useSocket();
   const [streams, setStreams] = useState(new Map());
   const isSingleUser = streams.size === 1;
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const {userName, audio: prevPageAudioControl, video: prevPageVideoControl} = location.state;
   const {
     mediaStream: media,
     toggleAudio,
     toggleVideo,
     isAudioEnabled,
     isVideoEnabled,
-  } = useMedia();
+  } = useMedia(prevPageAudioControl,prevPageVideoControl);
 
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const {userName} = location.state;
 
   useEffect(() => {
     if (!peerId || !socket || !roomId || !media) return;
@@ -89,15 +89,16 @@ const Room = () => {
 
   useEffect(() => {
     if (!media || !peerId) return;
+    console.log('Render!');
     setStreams((prev) => {
       return new Map(prev).set(peerId, {
         stream: media,
-        audio: true,
-        video: true,
+        audio: isAudioEnabled,
+        video: isVideoEnabled,
         userName,
       });
     });
-  }, [media, peerId, userName]);
+  }, [isAudioEnabled, isVideoEnabled, media, peerId, userName]);
 
   const handleToggleAudio = () => {
     socket.emit("TOGGLE_AUDIO", roomId, peerId);
@@ -158,19 +159,6 @@ const Room = () => {
     navigate('/');
   };
 
-   useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      socket.emit("CALL_END", roomId, peerId);
-      peer.disconnect();
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [socket, roomId, peerId, peer]);
-
   return (
     <div className="room-container">
       {[...streams.entries()].map(
@@ -208,8 +196,8 @@ const Room = () => {
       )}
       <div className="controls_wrapper">
         <div className="controls">
-          <AudioToggleButton isAudioEnabled={isAudioEnabled} onClick={handleToggleAudio} />
-          <VideoToggleButton isVideoEnabled={isVideoEnabled} onClick={handleToggleVideo} />
+          <AudioToggleButton isEnabled={isAudioEnabled} onClick={handleToggleAudio} />
+          <VideoToggleButton isEnabled={isVideoEnabled} onClick={handleToggleVideo} />
           <button className="control-item bg-red-500" onClick={onCallEnd}>
             <span className="material-symbols-outlined text-white">
               call_end

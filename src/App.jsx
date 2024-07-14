@@ -7,7 +7,7 @@ import Preview from "./pages/Preview";
 function App() {
   return <Routes>
     <Route path="/" element={<Home />} />
-    <Route path="/:roomId" element={<Room />} />
+    <Route path="/room/:roomId" element={<Room />} />
     <Route path="/:roomId/preview" element={<Preview />} />
   </Routes>;
 }

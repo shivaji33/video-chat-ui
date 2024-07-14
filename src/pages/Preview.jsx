@@ -4,6 +4,7 @@ import VideoToggleButton from "../components/VideoToggleButton";
 import Modal from "react-modal";
 import ImageSlider from "../components/ImageSlider";
 import MediaPlayer from "../components/MediaPlayer";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const customStyles = {
   overlay: {
@@ -42,36 +43,54 @@ const Preview = () => {
     isAudioEnabled,
     isVideoEnabled,
   } = useMedia();
+  const { roomId } = useParams();
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  const onJoinMeet = () => {
+    navigate(`/room/${roomId}`, {
+      state: {
+        userName: state.userName,
+        audio: isAudioEnabled,
+        video: isVideoEnabled,
+      },
+    });
+  };
 
   return (
     <>
-      <div className="flex flex-wrap h-screen bg-[#eee] md:items-center px-3">
-        <div className="relative m-auto md:w-3/5 sm:w-full bg-[#000]">
-          <MediaPlayer
-            isCurrentUser={true}
-            isVideoEnabled={isVideoEnabled}
-            stream={mediaStream}
-          />
-          <div className="controls_wrapper">
-            <div className="controls">
-              <AudioToggleButton
-                isEnabled={isAudioEnabled}
-                onClick={toggleAudio}
-              />
-              <VideoToggleButton
-                isEnabled={isVideoEnabled}
-                onClick={toggleVideo}
-              />
+      <div className="flex flex-wrap md:h-screen md:items-center px-3">
+        <div className="md:w-3/5 sm:w-full">
+          <div className="relative m-auto max-w-[600px] max-h-[600px]">
+            <MediaPlayer
+              isCurrentUser={true}
+              stream={mediaStream}
+              className="overflow-hidden rounded"
+            />
+            <div className="controls_wrapper">
+              <div className="controls">
+                <AudioToggleButton
+                  isEnabled={isAudioEnabled}
+                  onClick={toggleAudio}
+                />
+                <VideoToggleButton
+                  isEnabled={isVideoEnabled}
+                  onClick={toggleVideo}
+                />
+              </div>
             </div>
           </div>
         </div>
         <div className="md:w-2/5 w-full md:p-4 flex flex-col text-center items-center md:justify-center">
-          <h4 className="text-3xl my-4">Ready to join?</h4>
+          <h4 className="text-3xl my-4">
+            Ready to {state.isHost ? "host" : "join"}?
+          </h4>
           <button
             type="button"
             className="py-2 px-4 bg-blue-600 rounded text-white"
+            onClick={onJoinMeet}
           >
-            Join Now
+            {state.isHost ? "Host" : "Join"} Now
           </button>
         </div>
       </div>

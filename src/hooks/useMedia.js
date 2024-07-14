@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-const useMedia = () => {
+const useMedia = (initialAudioEnabled = null, initialVideoEnabled = null) => {
   const [mediaStream, setMediaStream] = useState(null);
-  const [isVideoEnabled, setIsVideoEnabled] = useState(false);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
-  const [accessStatus,setAccessStatus] = useState('INIT');
+  const [isVideoEnabled, setIsVideoEnabled] = useState(initialVideoEnabled);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(initialAudioEnabled);
+  const [accessStatus, setAccessStatus] = useState('INIT');
 
   useEffect(() => {
     const getMediaStream = async () => {
@@ -17,7 +17,7 @@ const useMedia = () => {
         setMediaStream(stream);
         setAccessStatus('GRANTED');
         setIsAudioEnabled(true);
-        setIsVideoEnabled(true)
+        setIsVideoEnabled(true);
       } catch (error) {
         console.error("Error accessing media devices:", error);
         setAccessStatus('DENIED');
@@ -35,23 +35,36 @@ const useMedia = () => {
     };
   }, [mediaStream]);
 
-  const toggleVideo = () => {
+  const toggleVideo = useCallback(() => {
     if (mediaStream) {
       const videoTrack = mediaStream.getVideoTracks()[0];
       videoTrack.enabled = !videoTrack.enabled;
       setIsVideoEnabled(videoTrack.enabled);
+      console.log('Toggle Video');
     }
-  };
+  }, [mediaStream]);
 
-  const toggleAudio = () => {
+  const toggleAudio = useCallback(() => {
     if (mediaStream) {
       const audioTrack = mediaStream.getAudioTracks()[0];
       audioTrack.enabled = !audioTrack.enabled;
       setIsAudioEnabled(audioTrack.enabled);
+      console.log('Toggle Audio');
     }
-  };
+  }, [mediaStream]);
 
-  
+  useEffect(() => {
+    if (mediaStream) {
+      console.log({initialAudioEnabled,isAudioEnabled,isVideoEnabled,initialVideoEnabled});
+      if (initialAudioEnabled !== null && isAudioEnabled !== initialAudioEnabled) {
+        toggleAudio();
+      }
+      if (initialVideoEnabled !== null && initialVideoEnabled !== isVideoEnabled) {
+        toggleVideo();
+      }
+    }
+  }, [initialAudioEnabled, initialVideoEnabled, isAudioEnabled, isVideoEnabled, mediaStream, toggleAudio, toggleVideo])
+
 
   return {
     accessStatus,

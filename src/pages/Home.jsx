@@ -24,7 +24,7 @@ const Home = () => {
       return;
     }
     const uuid = self.crypto.randomUUID();
-    navigate(`/${uuid}/preview`, {state: {userName: hostName}});
+    navigate(`/${uuid}/preview`, {state: {userName: hostName, isHost: true}});
   };
 
   return (
